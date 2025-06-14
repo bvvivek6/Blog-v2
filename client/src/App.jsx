@@ -1,35 +1,42 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { Toaster } from "react-hot-toast";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import BlogLandingPage from "./Pages/Blog/Components/BlogLandingPage";
+import BlogView from "./Pages/Blog/Components/BlogView";
+import PostByTags from "./Pages/Blog/Components/PostByTags";
+import SearchPosts from "./Pages/Blog/Components/SearchPosts";
+import AdminLogin from "./Pages/Admin/Components/AdminLogin";
+import AdminDashboard from "./Pages/Admin/Components/AdminDashboard";
+import BlogPosts from "./Pages/Admin/Components/BlogPosts";
+import BlogPostEditor from "./Pages/Admin/Components/BlogPostEditor";
+import PrivateRoute from "./Components/PrivateRoute";
 
-function App() {
-  const [count, setCount] = useState(0);
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<BlogLandingPage />} />
+          <Route path="/:id" element={<BlogView />} />
+          <Route path="/tag/:tagName" element={<PostByTags />} />
+          <Route path="/search" element={<SearchPosts />} />
+
+          {/*Admin Private Routes*/}
+          <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/posts" element={<BlogPosts />} />
+            <Route path="/admin/create" element={<BlogPostEditor />} />
+            <Route
+              path="/admin/edit/:id"
+              element={<BlogPostEditor isEdit={true} />}
+            />
+          </Route>
+
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        </Routes>
+      </Router>
+    </div>
   );
-}
+};
 
 export default App;
