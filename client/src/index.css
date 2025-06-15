@@ -3,6 +3,7 @@
 
 .font-dm-sans {
   font-family: "DM Sans", sans-serif;
+  font-kerning: -0.02em;
 }
 .font-dm-mono {
   font-family: "DM Mono", monospace;
