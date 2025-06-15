@@ -8,7 +8,8 @@ import AdminLogin from "./Pages/Admin/Components/AdminLogin";
 import AdminDashboard from "./Pages/Admin/Components/AdminDashboard";
 import BlogPosts from "./Pages/Admin/Components/BlogPosts";
 import BlogPostEditor from "./Pages/Admin/Components/BlogPostEditor";
-import PrivateRoute from "./Components/PrivateRoute";
+import PrivateRoutes from "./routes/PrivateRoutes";
+import Comments from "./Pages/Admin/Components/Comments";
 
 const App = () => {
   return (
@@ -21,7 +22,7 @@ const App = () => {
           <Route path="/search" element={<SearchPosts />} />
 
           {/*Admin Private Routes*/}
-          <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
+          <Route element={<PrivateRoutes allowedRoles={["admin"]} />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/posts" element={<BlogPosts />} />
             <Route path="/admin/create" element={<BlogPostEditor />} />
@@ -29,12 +30,24 @@ const App = () => {
               path="/admin/edit/:id"
               element={<BlogPostEditor isEdit={true} />}
             />
+            <Route path="/admin/comments" element={<Comments />} />
           </Route>
 
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
         </Routes>
       </Router>
+
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+        }}
+      />
     </div>
   );
 };

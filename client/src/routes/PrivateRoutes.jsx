@@ -1,7 +1,7 @@
 import React from "react";
 
 const PrivateRoutes = () => {
-  return <div>PrivateRoutes</div>;
+  return <Outlet />;
 };
 
 export default PrivateRoutes;
