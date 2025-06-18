@@ -24,7 +24,7 @@ connectDB();
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
-app.use("/api/blogs", blogRoutes);
+app.use("/api/posts", blogRoutes);
 // app.use("/api/comments", commentRotes);
 // app.use("/api/ai", aiRoutes);
 // app.use("/api/dashboard", dashboardRoutes);

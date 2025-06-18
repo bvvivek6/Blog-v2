@@ -16,7 +16,7 @@ const {
 
 //admin only
 const adminOnly = (req, res, next) => {
-  if (req.user && req.user.isAdmin) {
+  if (req.user && req.user.role === "admin") {
     next();
   } else {
     res.status(403).json({ message: "Access denied, admin only" });
@@ -26,14 +26,14 @@ const adminOnly = (req, res, next) => {
 //admin only privileges
 router.post("/", protect, adminOnly, createPost);
 router.put("/:id", protect, adminOnly, updatePost);
-router.delete("/:id", protect, adminOnly, deletePost);
+// router.delete("/:id", protect, adminOnly, deletePost);
 
-//public routes
-router.post("/:id/like", protect, likeBlogPost);
-router.get("/", getAllPosts);
-router.get("/:id", getPostById);
-router.get("/tag/:tag", getPostByTag);
-router.get("/search", searchBlog);
-router.post("/:idviews", incrementViews);
+// //public routes
+// router.post("/:id/like", protect, likeBlogPost);
+// router.get("/", getAllPosts);
+// router.get("/slug/:slug", getPostById);
+// router.get("/tag/:tag", getPostByTag);
+// router.get("/search", searchBlog);
+// router.post("/:idviews", incrementViews);
 
 module.exports = router;
