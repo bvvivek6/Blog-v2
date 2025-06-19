@@ -8,9 +8,9 @@ const {
   getAllPosts,
   getPostBySlug,
   getPostByTag,
-  searchBlog,
+  searchPosts,
   incrementViews,
-  likeBlogPost,
+  likePost,
   getTopPosts,
 } = require("../controllers/blogPostController");
 
@@ -29,11 +29,11 @@ router.put("/:id", protect, adminOnly, updatePost);
 router.delete("/:id", protect, adminOnly, deletePost);
 
 // //public routes
-// router.post("/:id/like", protect, likeBlogPost);
-// router.get("/", getAllPosts);
+router.post("/:id/like", protect, likePost);
+router.get("/", getAllPosts);
 router.get("/slug/:slug", getPostBySlug);
-// router.get("/tag/:tag", getPostByTag);
-// router.get("/search", searchBlog);
-// router.post("/:id/views", incrementViews);
+router.get("/tag/:tag", getPostByTag);
+router.get("/search", searchPosts);
+router.post("/:id/views", incrementViews);
 
 module.exports = router;

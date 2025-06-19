@@ -157,7 +157,6 @@ const getAllPosts = async (req, res) => {
 //get a single post by slug
 // @route GET/api/posts/:slug
 //public access
-
 const getPostBySlug = async (req, res) => {
   try {
     const post = await Blog.findOne({ slug: req.params.slug }).populate(
@@ -178,9 +177,20 @@ const getPostBySlug = async (req, res) => {
 
 //get post by tag
 // route GET/api/posts/tag/:tag . public
-
 const getPostByTag = async (req, res) => {
   try {
+    const post = await Blog.find({
+      tags: req.params.tag,
+      isDraft: false,
+    }).populate("author", "name profileImage");
+
+    if (!post || post.length === 0) {
+      return res.status(404).json({ message: "No posts found for this tag" });
+    }
+
+    res.status(200).json({
+      post,
+    });
   } catch (err) {
     return res.status(500).json({
       message: err.message,
@@ -193,6 +203,18 @@ const getPostByTag = async (req, res) => {
 
 const searchPosts = async (req, res) => {
   try {
+    const q = req.query.q;
+    const post = await Blog.find({
+      isDraft: false,
+      $or: [
+        { title: { $regex: q, $options: "i" } },
+        { content: { $regex: q, $options: "i" } },
+      ],
+    }).populate("author", "name profileImage");
+
+    res.status(200).json({
+      post,
+    });
   } catch (err) {
     return res.status(500).json({
       message: err.message,
@@ -202,8 +224,12 @@ const searchPosts = async (req, res) => {
 
 //increment post views
 // PUT/api/posts/:id/view
-const incrementView = async (req, res) => {
+const incrementViews = async (req, res) => {
   try {
+    await Blog.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } });
+    res.status(200).json({
+      message: "Views incremented successfully",
+    });
   } catch (err) {
     return res.status(500).json({
       message: err.message,
@@ -215,6 +241,12 @@ const incrementView = async (req, res) => {
 // POST/api/posts/:id/like
 const likePost = async (req, res) => {
   try {
+    await Blog.findByIdAndUpdate(req.params.id, {
+      $addToSet: { likes: req.user._id },
+    });
+    res.status(200).json({
+      message: "Post liked successfully",
+    });
   } catch (err) {
     return res.status(500).json({
       message: err.message,
@@ -230,6 +262,6 @@ module.exports = {
   getPostBySlug,
   getPostByTag,
   searchPosts,
-  incrementView,
+  incrementViews,
   likePost,
 };
