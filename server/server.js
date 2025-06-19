@@ -8,8 +8,7 @@ const path = require("path");
 
 const authRoutes = require("./routes/authRoutes");
 const blogRoutes = require("./routes/blogPostRoutes");
-// const commentRotes = require("./routes/commentRoutes");
-// const blogRoutes = require("./routes/blogRoutes");
+const commentRotes = require("./routes/commentRoutes");
 // const aiRoutes = require("./routes/aiRoutes");
 // const dashboardRoutes = require("./routes/dashboardRoutes");
 
@@ -25,7 +24,7 @@ connectDB();
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", blogRoutes);
-// app.use("/api/comments", commentRotes);
+app.use("/api/comments", commentRotes);
 // app.use("/api/ai", aiRoutes);
 // app.use("/api/dashboard", dashboardRoutes);
 

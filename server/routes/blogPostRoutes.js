@@ -35,5 +35,6 @@ router.get("/slug/:slug", getPostBySlug);
 router.get("/tag/:tag", getPostByTag);
 router.get("/search", searchPosts);
 router.post("/:id/views", incrementViews);
+router.get("/trending", getTopPosts);
 
 module.exports = router;

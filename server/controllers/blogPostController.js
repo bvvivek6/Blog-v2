@@ -254,6 +254,27 @@ const likePost = async (req, res) => {
   }
 };
 
+//get top trending posts
+// GET/api/posts/trending
+// This could be based on views, likes, or a combination of factors
+const getTopPosts = async (req, res) => {
+  try {
+    const posts = await Blog.find({ isDraft: false })
+      .sort({
+        views: -1,
+        likes: -1,
+      })
+      .limit(5);
+
+    res.status(200).json({
+      posts,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+};
 module.exports = {
   createPost,
   updatePost,
@@ -261,6 +282,7 @@ module.exports = {
   getAllPosts,
   getPostBySlug,
   getPostByTag,
+  getTopPosts,
   searchPosts,
   incrementViews,
   likePost,
