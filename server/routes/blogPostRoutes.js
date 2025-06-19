@@ -6,7 +6,7 @@ const {
   updatePost,
   deletePost,
   getAllPosts,
-  getPostById,
+  getPostBySlug,
   getPostByTag,
   searchBlog,
   incrementViews,
@@ -26,14 +26,14 @@ const adminOnly = (req, res, next) => {
 //admin only privileges
 router.post("/", protect, adminOnly, createPost);
 router.put("/:id", protect, adminOnly, updatePost);
-// router.delete("/:id", protect, adminOnly, deletePost);
+router.delete("/:id", protect, adminOnly, deletePost);
 
 // //public routes
 // router.post("/:id/like", protect, likeBlogPost);
 // router.get("/", getAllPosts);
-// router.get("/slug/:slug", getPostById);
+router.get("/slug/:slug", getPostBySlug);
 // router.get("/tag/:tag", getPostByTag);
 // router.get("/search", searchBlog);
-// router.post("/:idviews", incrementViews);
+// router.post("/:id/views", incrementViews);
 
 module.exports = router;

@@ -160,13 +160,24 @@ const getAllPosts = async (req, res) => {
 
 const getPostBySlug = async (req, res) => {
   try {
+    const post = await Blog.findOne({ slug: req.params.slug }).populate(
+      "author",
+      "name profileImage"
+    );
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.status(200).json({
+      post,
+    });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 };
 
 //get post by tag
-// route GET/api/posts/tag/:tag . publix
+// route GET/api/posts/tag/:tag . public
 
 const getPostByTag = async (req, res) => {
   try {

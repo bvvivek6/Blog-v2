@@ -32,6 +32,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      profileImage: req.file ? req.file.path : "",
       bio,
       role,
     });
@@ -42,6 +43,7 @@ const registerUser = async (req, res) => {
       email: user.email,
       bio: user.bio,
       role: user.role,
+      profileImage: user.profileImage,
       token: generateToken(user._id),
     });
   } catch (err) {
@@ -67,6 +69,7 @@ const loginUser = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      profileImage: user.profileImage,
       bio: user.bio,
       role: user.role,
       token: generateToken(user._id),
@@ -92,7 +95,7 @@ const getUserProfile = async (req, res) => {
     });
   } catch (err) {
     return res.status(500).json({ message: err.message });
-  } 
+  }
 };
 
 module.exports = {
