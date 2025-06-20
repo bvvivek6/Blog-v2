@@ -10,7 +10,7 @@ const authRoutes = require("./routes/authRoutes");
 const blogRoutes = require("./routes/blogPostRoutes");
 const commentRotes = require("./routes/commentRoutes");
 // const aiRoutes = require("./routes/aiRoutes");
-// const dashboardRoutes = require("./routes/dashboardRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 app.use(
   cors({
@@ -26,7 +26,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/posts", blogRoutes);
 app.use("/api/comments", commentRotes);
 // app.use("/api/ai", aiRoutes);
-// app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads"), {}));
 

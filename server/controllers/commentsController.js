@@ -1,12 +1,12 @@
 const Comment = require("../models/Comment");
-const Blog = require("../models/BlogPost");
+const Blog = require("../models/blog");
 
 const addComment = async (req, res) => {
   try {
     const { postId } = req.params;
     const { content, parentComment } = req.body;
 
-    const post = await Blog.findBYId(postId);
+    const post = await Blog.findById(postId); // Fixed typo here
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
@@ -19,12 +19,13 @@ const addComment = async (req, res) => {
     });
 
     await comment.populate("author", "name profileImage");
+    await comment.save(); // Save the comment to the database
     res.status(201).json({
       message: "Comment added successfully",
       comment,
     });
   } catch (err) {
-    return res.status(500).json({ message: "Server error" || err.message });
+    return res.status(500).json({ message: err.message || "Server error" });
   }
 };
 
@@ -37,17 +38,17 @@ const getAllComments = async (req, res) => {
       .sort({ createdAt: 1 });
 
     //comments map for commentId->comment Object
-    const commentsMap = {};
+    const commentMap = {};
     comments.forEach((comment) => {
       comment = comment.toObject();
       comment.replies = [];
-      commentsMap[comment._id] = comment;
+      commentMap[comment._id] = comment;
     });
 
-    //next replies under the parent comment
+    //nest replies under the parent comment
     const nestedComments = [];
     comments.forEach((comment) => {
-      if (parentComment) {
+      if (comment.parentComment) {
         const parent = commentMap[comment.parentComment];
         if (parent) {
           parent.replies.push(commentMap[comment._id]);
@@ -80,7 +81,7 @@ const getCommentsByPost = async (req, res) => {
       comment.replies = [];
       commentMap[comment._id] = comment;
     });
-    //next replies under the parent comment
+    //nest replies under the parent comment
     const nestedComments = [];
     comments.forEach((comment) => {
       if (comment.parentComment) {
@@ -92,6 +93,10 @@ const getCommentsByPost = async (req, res) => {
         nestedComments.push(commentMap[comment._id]);
       }
     });
+    res.status(200).json({
+      message: "Comments fetched successfully",
+      comments: nestedComments,
+    });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -100,6 +105,17 @@ const getCommentsByPost = async (req, res) => {
 //author or admin only
 const deleteComment = async (req, res) => {
   try {
+    const { commentId } = req.params;
+    const comment = await Comment.findById(commentId); // Fixed typo here
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    await Comment.deleteOne({ _id: commentId });
+    //delete all its replies
+    await Comment.deleteMany({ parentComment: commentId });
+
+    res.status(200).json({ message: "Comment deleted successfully" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
