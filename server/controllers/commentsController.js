@@ -69,10 +69,29 @@ const getAllComments = async (req, res) => {
 const getCommentsByPost = async (req, res) => {
   try {
     const { postId } = req.params;
-    const comments = await Comment.find({ post: postId }).populate(
-      "author",
-      "name profileImage"
-    ).populate("post", "title coverImage").sort({createdAt: 1});
+    const comments = await Comment.find({ post: postId })
+      .populate("author", "name profileImage")
+      .populate("post", "title coverImage")
+      .sort({ createdAt: 1 });
+
+    const commentMap = {};
+    comments.forEach((comment) => {
+      comment = comment.toObject();
+      comment.replies = [];
+      commentMap[comment._id] = comment;
+    });
+    //next replies under the parent comment
+    const nestedComments = [];
+    comments.forEach((comment) => {
+      if (comment.parentComment) {
+        const parent = commentMap[comment.parentComment];
+        if (parent) {
+          parent.replies.push(commentMap[comment._id]);
+        }
+      } else {
+        nestedComments.push(commentMap[comment._id]);
+      }
+    });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
