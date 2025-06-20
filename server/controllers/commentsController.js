@@ -30,6 +30,37 @@ const addComment = async (req, res) => {
 
 const getAllComments = async (req, res) => {
   try {
+    //get all comments with populated post and author
+    const comments = await Comment.find()
+      .populate("author", "name profileImage")
+      .populate("post", "title coverImage")
+      .sort({ createdAt: 1 });
+
+    //comments map for commentId->comment Object
+    const commentsMap = {};
+    comments.forEach((comment) => {
+      comment = comment.toObject();
+      comment.replies = [];
+      commentsMap[comment._id] = comment;
+    });
+
+    //next replies under the parent comment
+    const nestedComments = [];
+    comments.forEach((comment) => {
+      if (parentComment) {
+        const parent = commentMap[comment.parentComment];
+        if (parent) {
+          parent.replies.push(commentMap[comment._id]);
+        }
+      } else {
+        nestedComments.push(commentMap[comment._id]);
+      }
+    });
+
+    res.status(200).json({
+      message: "Comments fetched successfully",
+      comments: nestedComments,
+    });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -37,6 +68,11 @@ const getAllComments = async (req, res) => {
 
 const getCommentsByPost = async (req, res) => {
   try {
+    const { postId } = req.params;
+    const comments = await Comment.find({ post: postId }).populate(
+      "author",
+      "name profileImage"
+    ).populate("post", "title coverImage").sort({createdAt: 1});
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
