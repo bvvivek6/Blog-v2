@@ -9,7 +9,7 @@ const path = require("path");
 const authRoutes = require("./routes/authRoutes");
 const blogRoutes = require("./routes/blogPostRoutes");
 const commentRotes = require("./routes/commentRoutes");
-// const aiRoutes = require("./routes/aiRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 
 app.use(
@@ -25,7 +25,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", blogRoutes);
 app.use("/api/comments", commentRotes);
-// app.use("/api/ai", aiRoutes);
+app.use("/api/ai", aiRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads"), {}));
