@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
+import DashboardLayout from "../../../components/Layouts/DashboardLayout";
 
 const AdminLogin = () => {
   return (
-    <div>AdminLogin</div>
-  )
-}
-
-export default AdminLogin
+    <DashboardLayout>
+      <h1>AdminLogin</h1>
+    </DashboardLayout>
+  );
+};
+export default AdminLogin;
